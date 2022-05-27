@@ -10,6 +10,18 @@ boot_contracts = ["pox", "costs-v2", "bns"]
 path = "contracts/controlflows.clar"
 depends_on = []
 
+[contracts.divider-trait]
+path = "contracts/divider-trait.clar"
+depends_on = []
+
+[contracts.maths-util]
+path = "contracts/maths-util.clar"
+depends_on = ["divider-trait", "multiplier-trait"]
+
+[contracts.multiplier-trait]
+path = "contracts/multiplier-trait.clar"
+depends_on = []
+
 [contracts.practice]
 path = "contracts/practice.clar"
 depends_on = []
