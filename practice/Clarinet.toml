@@ -4,8 +4,25 @@ authors = []
 description = ""
 telemetry = true
 requirements = []
-analysis = ["check_checker"]
-costs_version = 2
+cache_dir = "/Users/aakanksha/.clarinet/cache"
+boot_contracts = ["pox", "costs-v2", "bns"]
+[contracts.controlflows]
+path = "contracts/controlflows.clar"
+depends_on = []
+
 [contracts.practice]
 path = "contracts/practice.clar"
 depends_on = []
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = true
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
