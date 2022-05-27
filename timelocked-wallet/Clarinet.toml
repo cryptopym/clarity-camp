@@ -1,0 +1,32 @@
+[project]
+name = "timelocked-wallet"
+authors = []
+description = ""
+telemetry = true
+requirements = []
+cache_dir = "/Users/aakanksha/.clarinet/cache"
+boot_contracts = ["pox", "costs-v2", "bns"]
+[contracts.example-contract]
+path = "contracts/example-contract.clar"
+depends_on = []
+
+[contracts.locked-wallet-trait]
+path = "contracts/locked-wallet-trait.clar"
+depends_on = []
+
+[contracts.timelocked-wallet]
+path = "contracts/timelocked-wallet.clar"
+depends_on = []
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
