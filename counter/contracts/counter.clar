@@ -9,9 +9,5 @@
 ) 
 
 (define-public (count-up)
-  (ok (var-set count (+ (var-get count) u1)))
+  (ok (var-set count (+ (get-count) u1)))
 )
-
-;; (define-public (send (amount uint) (receiver principal))
-;;   (ft-transfer? mialgo amount tx-sender receiver)
-;; )
