@@ -1,0 +1,41 @@
+[project]
+name = "dex"
+authors = []
+description = ""
+telemetry = true
+requirements = []
+cache_dir = "/Users/aakanksha/WORK/clarity-camp/dex/./.requirements"
+boot_contracts = ["pox", "costs-v2", "bns"]
+
+
+
+[contracts.token-austin]
+path = "contracts/external/token-austin.clar"
+depends_on = ["traits"]
+
+[contracts.token-ape]
+path = "contracts/external/token-ape.clar"
+depends_on = ["traits"]
+
+[contracts.token-mega]
+path = "contracts/external/token-mega.clar"
+depends_on = ["traits"]
+
+[contracts.traits]
+path = "contracts/external/traits.clar"
+
+[contracts.dex]
+path = "contracts/dex.clar"
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
