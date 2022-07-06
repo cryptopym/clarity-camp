@@ -36,6 +36,7 @@
 ;;
 ;; mint new tokens, only accessible by a Code Deployer
 (define-public (mint (amount uint) (recipient principal))
+  ;; #[filter(amount, recipient)]
   (ft-mint? mega amount recipient)
 )
 
@@ -54,11 +55,13 @@
       (print memo)
       none
     )
+    ;; #[filter(amount, from, to)]
     (ft-transfer? mega amount from to)
   )
 )
 
 (define-public (set-token-uri (uri (string-utf8 256)))
+  ;; #[filter(uri)]
   (ok (var-set tokenUri (some uri)))
 )
 
