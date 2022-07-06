@@ -38,6 +38,7 @@
 ;; directly run in console
 (unwrap! (ok u100) (err "unwrap failed"))  ;; unwraps the inner ok response
 (unwrap! (some u100) (err "unwrap failed"))  ;; unwraps the inner optional response
+;; (unwrap! (err u100) (err "unwrap failed")) ;; unable to unwrap the err response
 
 ;; Call this function from console
 (define-public (unwrap-example (input (response (string-ascii 20) uint)))
@@ -55,6 +56,7 @@
 ;; directly run in console
 (unwrap-panic (ok "Hello"))
 (unwrap-panic (some "World"))
+;; (unwrap-panic (err "World"))
 
 ;; call function from console
 (define-public (unwrap-panic-example (input (response (string-ascii 30) uint)))
@@ -86,12 +88,15 @@
 
 ;; unwrap-err-panic!
 
-;; (define-public (unwrap-err-panic-example (input (response (string-ascii 20) uint)))
-;;   (begin
-;;     (unwrap-err-panic input)
-;;     (ok "end of the function")
-;;   )
-;; )
+(define-public (unwrap-err-panic-example (input (response (string-ascii 20) uint)))
+  (begin
+    (unwrap-err-panic input)
+    (ok "end of the function")
+  )
+)
+
+;; (contract-call? .controlflows unwrap-err-panic-example (err u2000))
+;; (contract-call? .controlflows unwrap-err-panic-example (ok "Calling Unwrap Panic"))
 
 
 ;; =================================================================================================================
