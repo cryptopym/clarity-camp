@@ -109,3 +109,17 @@
   )
 )
 
+(define-public (change-price (listingId uint) (token <sip-010-token>) (price uint))
+  (let
+    (
+      (listing (unwrap! (map-get? TokenListing listingId) ERR_LISTING_NOT_FOUND))
+    )
+
+    (asserts! (> price u0) ERR_INVALID_TOKEN_VALUE)
+    (asserts! (is-eq (get seller listing) tx-sender) ERR_UNAUTHORIZED)
+    (asserts! (is-eq (get token listing) (contract-of token)) ERR_INVALID_TOKEN)
+
+    (map-set TokenListing listingId (merge listing { price: price } ))
+    (ok true)
+  )
+)
