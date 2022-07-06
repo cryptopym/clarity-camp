@@ -12,6 +12,9 @@
 ;;
 (define-constant ERR_INVALID_TOKEN_VALUE (err u100))
 (define-constant ERR_TOKEN_ALREADY_LISTED (err u101))
+(define-constant ERR_LISTING_NOT_FOUND (err u102))
+(define-constant ERR_UNAUTHORIZED (err u103))
+(define-constant ERR_INVALID_TOKEN (err u104))
 
 ;; data maps and vars
 ;;
@@ -58,6 +61,29 @@
     (try! (contract-call? token transfer tokenTotalAmount tx-sender CONTRACT_ADDRESS none))
 
     (ok newListingId)
+  )
+)
+
+(define-public (add-tokens (listingId uint) (token <sip-010-token>) (amount uint))
+  (let
+    (
+      (listing (unwrap! (map-get? TokenListing listingId) ERR_LISTING_NOT_FOUND))
+    )
+
+    (asserts! (> amount u0) ERR_INVALID_TOKEN_VALUE)
+    (asserts! (is-eq (get seller listing) tx-sender) ERR_UNAUTHORIZED)
+    (asserts! (is-eq (get token listing) (contract-of token)) ERR_INVALID_TOKEN)
+
+    (map-set TokenListing listingId 
+      (merge listing {
+        tokenAmount: (+ (get tokenAmount listing) amount), 
+        tokensLeft: (+ (get tokensLeft listing) amount)
+      })
+    )
+
+    (try! (contract-call? token transfer amount tx-sender CONTRACT_ADDRESS none))
+
+    (ok true)
   )
 )
 
