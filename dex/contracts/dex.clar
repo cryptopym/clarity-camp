@@ -87,3 +87,25 @@
   )
 )
 
+(define-public (withdraw-tokens (listingId uint) (token <sip-010-token>) (amount uint))
+  (let
+    (
+      (listing (unwrap! (map-get? TokenListing listingId) ERR_LISTING_NOT_FOUND))
+    )
+
+    (asserts! (and (> amount u0) (< amount (get tokensLeft listing))) ERR_INVALID_TOKEN_VALUE)
+    (asserts! (is-eq (get seller listing) tx-sender) ERR_UNAUTHORIZED)
+    (asserts! (is-eq (get token listing) (contract-of token)) ERR_INVALID_TOKEN)
+
+    (map-set TokenListing listingId 
+      (merge listing {
+        tokensLeft: (- (get tokensLeft listing) amount)
+      })
+    )
+
+    (try! (as-contract (contract-call? token transfer amount CONTRACT_ADDRESS (get seller listing) none)))
+
+    (ok true)
+  )
+)
+
