@@ -17,7 +17,6 @@
 (define-constant ERR_UNAUTHORIZED (err u103))
 (define-constant ERR_INVALID_TOKEN (err u104))
 (define-constant ERR_NOT_ENOUGH_TOKENS (err u105))
-(define-constant ERR_HIGH_SLIPPAGE (err u106))
 
 ;; data maps and vars
 ;;
@@ -39,6 +38,7 @@
 (define-read-only (get-token-listing (listingId uint))
   (map-get? TokenListing listingId)
 )
+;; (contract-call? .dex get-token-listing u2001)
 
 (define-read-only (get-fee (stxAmount uint))
   (/ (* stxAmount (var-get feeRate)) u10000)
@@ -71,6 +71,7 @@
     (ok newListingId)
   )
 )
+;; (contract-call? .dex list-sip10-token-for-sale 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u20000 u200)
 
 (define-public (add-tokens (listingId uint) (token <sip-010-token>) (amount uint))
   (let
@@ -94,6 +95,7 @@
     (ok true)
   )
 )
+;; (contract-call? .dex add-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2009)
 
 (define-public (withdraw-tokens (listingId uint) (token <sip-010-token>) (amount uint))
   (let
@@ -116,6 +118,7 @@
     (ok true)
   )
 )
+;;  (contract-call? .dex withdraw-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2001)
 
 (define-public (change-price (listingId uint) (token <sip-010-token>) (price uint))
   (let
@@ -131,6 +134,7 @@
     (ok true)
   )
 )
+;; (contract-call? .dex change-price u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u788)
 
 (define-public (buy-tokens (listingId uint) (token <sip-010-token>) (minTokenQty uint) (maxStxCost uint))
   (let
@@ -144,7 +148,6 @@
     (asserts! (is-eq (get token listing) (contract-of token)) ERR_INVALID_TOKEN)
     (asserts! (>= (get tokensLeft listing) minTokenQty) ERR_NOT_ENOUGH_TOKENS)
     (asserts! (and (> minTokenQty u0) (> maxStxCost u0)) ERR_INVALID_VALUE)
-    (asserts! (>= buyQty minTokenQty) ERR_HIGH_SLIPPAGE)
 
     (map-set TokenListing
       listingId
@@ -166,4 +169,9 @@
     (ok true)
   )
 )
+;; (contract-call? .dex get-fee u4000)
+;; (contract-call? .dex set-fee-rate u8)
+;; (contract-call? .dex get-fee-rate u8)
 
+
+;; (contract-call? .token-austin mint u2000000 tx-sender)
