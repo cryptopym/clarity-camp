@@ -4,8 +4,10 @@ authors = []
 description = ""
 telemetry = true
 requirements = []
-cache_dir = "/Users/aakanksha/.clarinet/cache"
 boot_contracts = ["pox", "costs-v2", "bns"]
+
+[project.cache_location]
+path = "/Users/aakanksha/.clarinet/cache"
 [contracts.controlflows]
 path = "contracts/controlflows.clar"
 
@@ -23,6 +25,9 @@ path = "contracts/multiplier-trait.clar"
 
 [contracts.practice]
 path = "contracts/practice.clar"
+
+[contracts.storing-data]
+path = "contracts/storing-data.clar"
 
 [repl]
 costs_version = 2
