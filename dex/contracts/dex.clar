@@ -137,13 +137,14 @@
 
 (define-public (buy-tokens (listingId uint) (token <sip-010-token>) (minTokenQty uint) (maxStxCost uint))
   (let
-    (
-      (listing (unwrap! (map-get? TokenListing listingId) ERR_LISTING_NOT_FOUND))
+    ( 
+      (buyer tx-sender)
+      (listing (unwrap! (get-token-listing listingId) ERR_LISTING_NOT_FOUND))
       (buyQty (/ (- maxStxCost (get-fee maxStxCost)) (get price listing)))
       (buyCost (* buyQty (get price listing)))
       (buyFee (get-fee buyCost))
     )
-    
+
     (asserts! (is-eq (get token listing) (contract-of token)) ERR_INVALID_TOKEN)
     (asserts! (>= (get tokensLeft listing) minTokenQty) ERR_NOT_ENOUGH_TOKENS)
     (asserts! (and (> minTokenQty u0) (> maxStxCost u0)) ERR_INVALID_VALUE)
@@ -155,7 +156,7 @@
 
     (try! (stx-transfer? (+ buyCost buyFee) tx-sender CONTRACT_ADDRESS)) ;; transfer all costs to contract
     (try! (as-contract (stx-transfer? buyCost CONTRACT_ADDRESS (get seller listing)))) ;; transfer total - fee from contract to seller
-    (try! (as-contract (contract-call? token transfer buyQty CONTRACT_ADDRESS tx-sender none))) ;; transfer tokens to buyer
+    (try! (as-contract (contract-call? token transfer buyQty CONTRACT_ADDRESS buyer none))) ;; transfer tokens to buyer
     (ok true)
   )
 )
@@ -197,6 +198,7 @@
 ;; ::get_assets_maps
 
 ;; 9. As an interested user, you can buy tokens available for sale on DEX.
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.dex buy-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u10 u1000)
 ;; ::get_assets_maps
 
 ;; 10. As a token owner, you can sell your tokens on the DEX.
