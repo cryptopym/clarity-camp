@@ -1,16 +1,13 @@
 
 ;; dex
-
 (use-trait sip-010-token .traits.ft-trait)
 
 ;; constants
-;;
 (define-constant CONTRACT_OWNER tx-sender)
 (define-constant CONTRACT_ADDRESS (as-contract tx-sender))
 (define-constant MAX_FEE_RATE u10)
 
 ;; errors
-;;
 (define-constant ERR_INVALID_VALUE (err u100))
 (define-constant ERR_TOKEN_ALREADY_LISTED (err u101))
 (define-constant ERR_LISTING_NOT_FOUND (err u102))
@@ -19,7 +16,6 @@
 (define-constant ERR_NOT_ENOUGH_TOKENS (err u105))
 
 ;; data maps and vars
-;;
 (define-data-var lastListingId uint u2000)
 (define-data-var feeRate uint u0)
 
@@ -38,14 +34,12 @@
 (define-read-only (get-token-listing (listingId uint))
   (map-get? TokenListing listingId)
 )
-;; (contract-call? .dex get-token-listing u2001)
 
 (define-read-only (get-fee (stxAmount uint))
   (/ (* stxAmount (var-get feeRate)) u10000)
 )
 
 ;; public functions
-;;
 (define-public (list-sip10-token-for-sale (token <sip-010-token>) (tokenTotalAmount uint) (tokenPrice uint))
   (let
     (
@@ -71,7 +65,6 @@
     (ok newListingId)
   )
 )
-;; (contract-call? .dex list-sip10-token-for-sale 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u20000 u200)
 
 (define-public (add-tokens (listingId uint) (token <sip-010-token>) (amount uint))
   (let
@@ -95,7 +88,6 @@
     (ok true)
   )
 )
-;; (contract-call? .dex add-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2009)
 
 (define-public (withdraw-tokens (listingId uint) (token <sip-010-token>) (amount uint))
   (let
@@ -118,7 +110,6 @@
     (ok true)
   )
 )
-;;  (contract-call? .dex withdraw-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2001)
 
 (define-public (change-price (listingId uint) (token <sip-010-token>) (price uint))
   (let
@@ -134,7 +125,15 @@
     (ok true)
   )
 )
-;; (contract-call? .dex change-price u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u788)
+
+(define-public (set-fee-rate (newFeeRate uint))
+  (begin
+    (asserts! (<= newFeeRate MAX_FEE_RATE) ERR_INVALID_VALUE)
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set feeRate newFeeRate)
+    (ok true)
+  )
+)
 
 (define-public (buy-tokens (listingId uint) (token <sip-010-token>) (minTokenQty uint) (maxStxCost uint))
   (let
@@ -161,17 +160,44 @@
   )
 )
 
-(define-public (set-fee-rate (newFeeRate uint))
-  (begin
-    (asserts! (<= newFeeRate MAX_FEE_RATE) ERR_INVALID_VALUE)
-    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
-    (var-set feeRate newFeeRate)
-    (ok true)
-  )
-)
-;; (contract-call? .dex get-fee u4000)
-;; (contract-call? .dex set-fee-rate u8)
-;; (contract-call? .dex get-fee-rate u8)
+;; TESTING FUNCTIONS
 
+;; 0. Base exchange is with stacks
 
+;; 1. Mint tokens (token-austin) to an owner -- At this point owner has austin tokens in your account/wallet
 ;; (contract-call? .token-austin mint u2000000 tx-sender)
+;; ::get_assets_maps
+
+;; 2. Mint tokens (token-ape) to the same owner -- At this point owner has ape tokens in your account/wallet
+;; (contract-call? .token-ape mint u2000000 tx-sender)
+;; ::get_assets_maps
+
+;; 3. As the listing owner you can create a listing for your tokens on the DEX platform.
+;; (contract-call? .dex list-sip10-token-for-sale 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u20000 u200)
+;; ::get_assets_maps
+
+;; 4. As the listing owner you can add tokens to your existing listing.
+;; (contract-call? .dex add-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2009)
+;; ::get_assets_maps
+
+;; 5. As the listing owner you can withdraw tokens from your existing listing.
+;; (contract-call? .dex withdraw-tokens u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u2001)
+;; ::get_assets_maps
+
+;; 6. As the listing owner you can change the price of your existing listing.
+;; (contract-call? .dex change-price u2001 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token-austin u788)
+;; ::get_assets_maps
+
+;; 7. As the listing owner you can set the fee rate
+;; (contract-call? .dex set-fee-rate u8)
+;; ::get_assets_maps
+
+;; 8. As the listing owner you can set the fee rate
+;; (contract-call? .dex set-fee-rate u8)
+;; ::get_assets_maps
+
+;; 9. As an interested user, you can buy tokens available for sale on DEX.
+;; ::get_assets_maps
+
+;; 10. As a token owner, you can sell your tokens on the DEX.
+;; ::get_assets_maps
