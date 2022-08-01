@@ -4,19 +4,21 @@ authors = []
 description = ""
 telemetry = true
 requirements = []
-cache_dir = "/Users/aakanksha/.clarinet/cache"
 boot_contracts = ["pox", "costs-v2", "bns"]
-[contracts.example-contract]
-path = "contracts/example-contract.clar"
-depends_on = []
+
+[project.cache_location]
+path = ".requirements"
+[contracts.dispatch-call]
+path = "contracts/dispatch-call.clar"
 
 [contracts.locked-wallet-trait]
 path = "contracts/locked-wallet-trait.clar"
-depends_on = []
+
+[contracts.static-call]
+path = "contracts/static-call.clar"
 
 [contracts.timelocked-wallet]
 path = "contracts/timelocked-wallet.clar"
-depends_on = []
 
 [repl]
 costs_version = 2
