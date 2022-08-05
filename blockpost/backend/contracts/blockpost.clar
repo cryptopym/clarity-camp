@@ -5,8 +5,7 @@
 ;; constants
 ;; wallet that will receive the fees paid to post (taken from Devnet.toml)
 (define-constant receiver-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
-(define-constant price u100)
-(define-constant ERR-NAME u1)
+(define-constant price u1)
 
 ;; data maps and vars
 ;; store the total number of posts
