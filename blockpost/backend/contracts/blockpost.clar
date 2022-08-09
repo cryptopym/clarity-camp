@@ -14,6 +14,7 @@
 (define-map posts principal (string-utf8 500))
 
 ;; private functions
+;; additional comment
 
 ;; public functions
 ;; get the total-posts
